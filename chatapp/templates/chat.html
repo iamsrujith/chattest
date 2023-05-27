@@ -1,0 +1,40 @@
+<!-- chat.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Room</title>
+    <script>
+        var chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+
+        chatSocket.onmessage = function (e) {
+            var message = JSON.parse(e.data).message;
+            // Handle received message
+            // ...
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        function sendMessage() {
+            var messageInput = document.getElementById('message-input');
+            var message = messageInput.value;
+
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+
+            messageInput.value = '';
+        }
+    </script>
+</head>
+<body>
+    <h1>Chat Room</h1>
+
+    <div id="chat-log"></div>
+
+    <input id="message-input" type="text" autofocus>
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>
